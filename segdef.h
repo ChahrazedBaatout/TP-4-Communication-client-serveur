@@ -8,6 +8,7 @@
 #define seg_init  	1
 #define res_ok    	2
 #define maxval   	100
+#define NUMBER_OF_SEGMENTS_PER_CLIENT 5
 
 typedef struct shmseg
 {

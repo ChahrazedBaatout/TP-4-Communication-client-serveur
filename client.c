@@ -86,7 +86,7 @@ void initialisations(int* semid, int* shmid, segment** seg ) {
     init_rand();
 }
 
-void sendSegment(int semid, segment* seg) {
+void sendOneSegment(int semid, segment* seg) {
     acq_sem(semid, seg_dispo);
     *seg = preparedSegment();
     acq_sem(semid, seg_init);
@@ -97,11 +97,18 @@ void sendSegment(int semid, segment* seg) {
     lib_sem(semid,seg_dispo);
     displaySegment(*seg);
 }
+
+void sendSegments(int semid, segment* seg, int n) {
+    for (int i = 0; i < n; i++) {
+        sendOneSegment(semid, seg);
+    }
+}
+
 int main(void) {
     int semid;
     int shmid;
     segment *seg;
     initialisations(&semid, &shmid, &seg );
-    sendSegment(semid, seg);
+    sendSegments(semid, seg, NUMBER_OF_SEGMENTS_PER_CLIENT);
     return 0;
 }
