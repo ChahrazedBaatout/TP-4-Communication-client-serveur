@@ -52,7 +52,7 @@ segment preparedSegment() {
     segment seg;
     seg.pid = getpid();
     seg.req = generateRequestId(getpid());
-    generateRandomArray(seg.tab, maxval);
+    generateRandomArray(seg.tab, MAXVAL);
     seg.result = 0;
     return seg;
 }
@@ -61,34 +61,34 @@ void displaySegment(segment seg) {
     printf("Segment PID: %d\n", seg.pid);
     printf("Segment REQ: %d\n", seg.req);
     printf("Segment TAB: ");
-    displayArray(seg.tab, maxval);
-    printf("Segment RESULT (client): %ld\n", averageArray(seg.tab, maxval));
+    displayArray(seg.tab, MAXVAL);
+    printf("Segment RESULT (client): %ld\n", averageArray(seg.tab, MAXVAL));
     printf("Segment RESULT (server): %ld\n", seg.result);
     printf("Compare results (diff): ");
-    seg.result - averageArray(seg.tab, maxval) == 0 ?printf("TRUE") : printf("FALSE");
+    seg.result - averageArray(seg.tab, MAXVAL) == 0 ?printf("TRUE") : printf("FALSE");
     printf("\n--------------------------------------------------------\n");
 }
 
 
 void displaySegment2(segment seg) {
-    if (seg.result - averageArray(seg.tab, maxval) != 0) {
+    if (seg.result - averageArray(seg.tab, MAXVAL) != 0) {
         printf("Segment PID: %d\n", seg.pid);
         printf("Segment REQ: %d\n", seg.req);
         printf("Segment TAB: ");
-        displayArray(seg.tab, maxval);
-        printf("Segment RESULT (client): %ld\n", averageArray(seg.tab, maxval));
+        displayArray(seg.tab, MAXVAL);
+        printf("Segment RESULT (client): %ld\n", averageArray(seg.tab, MAXVAL));
         printf("Segment RESULT (server): %ld\n", seg.result);
         printf("\n--------------------------------------------------------\n");
     }
 }
 
 void initialisations(int* semid, int* shmid, segment** seg ) {
-    if ((*semid=semget(cle,3,0))==-1) {
+    if ((*semid=semget(CLE,3,0))==-1) {
         perror("semget");
         exit(1);
     }
 
-    if ((*shmid = shmget(cle, segsize, 0)) == -1) {
+    if ((*shmid = shmget(CLE, segsize, 0)) == -1) {
         perror("shmget");
         exit(1);
     }
@@ -101,14 +101,14 @@ void initialisations(int* semid, int* shmid, segment** seg ) {
 }
 
 void sendOneSegment(int semid, segment* seg) {
-    acq_sem(semid, seg_dispo);
+    acq_sem(semid, SEG_DISPO);
     *seg = preparedSegment();
-    acq_sem(semid, seg_init);
-    wait_sem(semid, res_ok);
-    lib_sem(semid, seg_init);
-    acq_sem(semid, res_ok);
-    lib_sem(semid,res_ok);
-    lib_sem(semid,seg_dispo);
+    acq_sem(semid, SEG_INIT);
+    wait_sem(semid, RES_OK);
+    lib_sem(semid, SEG_INIT);
+    acq_sem(semid, RES_OK);
+    lib_sem(semid,RES_OK);
+    lib_sem(semid,SEG_DISPO);
     displaySegment2(*seg);
 }
 

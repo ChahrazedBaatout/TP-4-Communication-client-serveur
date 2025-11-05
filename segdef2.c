@@ -1,6 +1,5 @@
 #include "segdef2.h"
 #include <stdio.h>
-
 #include <stdlib.h>
 #include <time.h>
 
@@ -16,7 +15,7 @@ void wait_sem(int id, int sem){
     struct sembuf sop;
     sop.sem_flg = SEM_UNDO;
     sop.sem_num = sem;
-    sop.sem_op = 0; //waits sem 0
+    sop.sem_op = 0;
 
     if(semop(id, &sop, 1) == -1){
         perror("semop");
@@ -27,7 +26,7 @@ void acq_sem(int id, int sem) {
     struct sembuf sop;
     sop.sem_flg = SEM_UNDO;
     sop.sem_num = sem;
-    sop.sem_op = -1; //acquires sem
+    sop.sem_op = -1;
 
     if(semop(id, &sop, 1) == -1){
         perror("semop");
@@ -39,7 +38,7 @@ void lib_sem(int id, int sem){
     struct sembuf sop;
     sop.sem_flg = SEM_UNDO;
     sop.sem_num = sem;
-    sop.sem_op = 1; //frees sem 0
+    sop.sem_op = 1;
 
     if(semop(id, &sop, 1) == -1){
         perror("semop");

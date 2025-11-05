@@ -3,7 +3,7 @@
 #include <sys/sem.h>
 #include <sys/shm.h>
 
-#define cle 		(key_t)3
+#define CLE 		(key_t)3
 #define seg_dispo 	0
 #define seg_init  	1
 #define res_ok    	2
