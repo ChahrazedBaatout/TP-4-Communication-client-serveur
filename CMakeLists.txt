@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 4.0)
-project(untitled4 C)
+project(TP4_OS C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(untitled4 client.c)
+add_executable(TP4_OS client.c)
