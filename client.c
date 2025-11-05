@@ -1,10 +1,32 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "segdef.h"
-#define ARRAY_SIZE 10
 
-long* generateRandomArray(int size) {
-    long* arr = (long*)malloc(size * sizeof(long));
+static int count = 0;
+
+int longeurPid(int pid) {
+    int length = 0;
+    while (pid != 0) {
+        pid /= 10;
+        length++;
+    }
+    return length;
+}
+
+int pow(int base, int exp) {
+    int result = 1;
+    for (int i = 0; i < exp; i++) {
+        result *= base;
+    }
+    return result;
+}
+
+int generateRequestId(int pid) {
+    return pid +(++count)*pow(10,(longeurPid(pid)));
+}
+
+long* generateRandomArray(long* arr, int size) {
     for (int i = 0; i < size; i++) {
         arr[i] = getrand();
     }
@@ -26,12 +48,34 @@ long averageArray(long* arr, int size) {
     return sum / size;
 }
 
+segment preparedSegment() {
+    segment seg;
+    seg.pid = getpid();
+    seg.req = generateRequestId(getpid());
+    generateRandomArray(seg.tab, maxval);
+    seg.result = 0;
+    return seg;
+}
+
+void displaySegment(segment seg) {
+    printf("Segment PID: %d\n", seg.pid);
+    printf("Segment REQ: %d\n", seg.req);
+    printf("Segment TAB: ");
+    displayArray(seg.tab, maxval);
+    printf("Segment RESULT (client): %ld\n", averageArray(seg.tab, maxval));
+    printf("Segment RESULT (server): %ld\n", seg.result);
+    printf("Compare results (diff): %ld\n", seg.result - averageArray(seg.tab, maxval));
+    printf("--------------------------------------------------------\n");
+}
+
 int main(void) {
     init_rand();
-    int size = ARRAY_SIZE;
-    long* randomArray = generateRandomArray(size);
-    printf("Generated array: ");
-    displayArray(randomArray, size);
-    printf("Average: %ld\n",  averageArray(randomArray, size));
+    segment seg = preparedSegment();
+    displaySegment(seg);
+    segment seg2 = preparedSegment();
+    displaySegment(seg2);
+
+    segment seg3 = preparedSegment();
+    displaySegment(seg3);
     return 0;
 }
