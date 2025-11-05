@@ -4,4 +4,5 @@ project(TP4_OS C)
 set(CMAKE_C_STANDARD 11)
 
 add_executable(TP4_OS client.c
-        segdef2.c)
+        segdef2.c
+        magic_values.h)

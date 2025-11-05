@@ -4,6 +4,7 @@
 #include <sys/shm.h>
 
 #define CLE 		(key_t)3
+#define CLE_VALUE    3
 #define SEG_DISPO 	0
 #define SEG_INIT  	1
 #define RES_OK    	2
