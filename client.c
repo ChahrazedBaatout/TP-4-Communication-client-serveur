@@ -14,7 +14,7 @@ int longeurPid(int pid) {
     return length;
 }
 
-int pow(int base, int exp) {
+int power(int base, int exp) {
     int result = 1;
     for (int i = 0; i < exp; i++) {
         result *= base;
@@ -23,7 +23,7 @@ int pow(int base, int exp) {
 }
 
 int generateRequestId(int pid) {
-    return pid +(++count)*pow(10,(longeurPid(pid)));
+    return pid +(++count)*power(10,(longeurPid(pid)));
 }
 
 long* generateRandomArray(long* arr, int size) {
