@@ -64,8 +64,9 @@ void displaySegment(segment seg) {
     displayArray(seg.tab, maxval);
     printf("Segment RESULT (client): %ld\n", averageArray(seg.tab, maxval));
     printf("Segment RESULT (server): %ld\n", seg.result);
-    printf("Compare results (diff): %ld\n", seg.result - averageArray(seg.tab, maxval));
-    printf("--------------------------------------------------------\n");
+    printf("Compare results (diff): ");
+    seg.result - averageArray(seg.tab, maxval) == 0 ?printf("TRUE") : printf("FALSE");
+    printf("\n--------------------------------------------------------\n");
 }
 
 void initialisations(int* semid, int* shmid, segment** seg ) {
