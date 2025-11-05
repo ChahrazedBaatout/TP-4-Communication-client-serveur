@@ -105,11 +105,22 @@ void sendSegments(int semid, segment* seg, int n) {
     }
 }
 
+void detachSegment(segment* seg) {
+    if (shmdt(seg) == -1) {
+        perror("shmdt");
+        exit(1);
+    }
+}
+
 int main(void) {
+    fork();
+    fork();
+    fork();
     int semid;
     int shmid;
     segment *seg;
     initialisations(&semid, &shmid, &seg );
     sendSegments(semid, seg, NUMBER_OF_SEGMENTS_PER_CLIENT);
+    detachSegment(seg);
     return 0;
 }
