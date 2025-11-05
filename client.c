@@ -1,6 +1,9 @@
 #include <stdio.h>
+#include "segdef.h"
 
 int main(void) {
-    printf("Hello, World!\n");
+    init_rand();
+    long num = getrand();
+    printf("Generated randomly number : %ld \n", num);
     return 0;
 }
