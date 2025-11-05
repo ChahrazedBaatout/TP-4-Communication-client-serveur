@@ -68,7 +68,7 @@ void displaySegment(segment seg) {
     printf("--------------------------------------------------------\n");
 }
 
-void initialisations(int* semid, int* shmid, segment* seg ) {
+void initialisations(int* semid, int* shmid, segment** seg ) {
     if ((*semid=semget(cle,3,0))==-1) {
         perror("semget");
         exit(1);
@@ -79,17 +79,29 @@ void initialisations(int* semid, int* shmid, segment* seg ) {
         exit(1);
     }
 
-    if ((seg=shmat(*shmid,NULL,0))== (void *)-1) {
+    if ((*seg=shmat(*shmid,NULL,0))== (void *)-1) {
         perror("shmat");
         exit(1);
     }
     init_rand();
 }
 
+void sendSegment(int semid, segment* seg) {
+    acq_sem(semid, seg_dispo);
+    *seg = preparedSegment();
+    acq_sem(semid, seg_init);
+    wait_sem(semid, res_ok);
+    lib_sem(semid, seg_init);
+    acq_sem(semid, res_ok);
+    lib_sem(semid,res_ok);
+    lib_sem(semid,seg_dispo);
+    displaySegment(*seg);
+}
 int main(void) {
     int semid;
     int shmid;
-    segment seg;
+    segment *seg;
     initialisations(&semid, &shmid, &seg );
+    sendSegment(semid, seg);
     return 0;
 }
