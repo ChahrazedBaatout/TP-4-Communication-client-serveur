@@ -2,13 +2,11 @@ SRC = $(wildcard *.c)
 BIN = $(patsubst %.c,%,$(SRC))
 
 CFLAGS += -Wall -Wextra -g
-LIBS = libseg.a
+client: client.c segdef2.c
+	$(CC) $(CFLAGS) -o $@ $^
 #CFLAGS += --std=c99
 
 all: $(BIN)
-
-%: %.c $(LIBS)
-	$(CC) $(CFLAGS) $< $(LIBS) -o $@
 
 clean:
 	rm -f $(BIN)
