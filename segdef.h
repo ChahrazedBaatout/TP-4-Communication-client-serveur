@@ -9,7 +9,7 @@
 #define res_ok    	2
 #define maxval   	100
 #define NUMBER_OF_SEGMENTS_PER_CLIENT 5
-
+#define NUMBER_OF_CLIENTS 10
 typedef struct shmseg
 {
    int pid;

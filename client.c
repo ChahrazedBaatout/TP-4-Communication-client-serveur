@@ -69,6 +69,19 @@ void displaySegment(segment seg) {
     printf("\n--------------------------------------------------------\n");
 }
 
+
+void displaySegment2(segment seg) {
+    if (seg.result - averageArray(seg.tab, maxval) != 0) {
+        printf("Segment PID: %d\n", seg.pid);
+        printf("Segment REQ: %d\n", seg.req);
+        printf("Segment TAB: ");
+        displayArray(seg.tab, maxval);
+        printf("Segment RESULT (client): %ld\n", averageArray(seg.tab, maxval));
+        printf("Segment RESULT (server): %ld\n", seg.result);
+        printf("\n--------------------------------------------------------\n");
+    }
+}
+
 void initialisations(int* semid, int* shmid, segment** seg ) {
     if ((*semid=semget(cle,3,0))==-1) {
         perror("semget");
@@ -96,7 +109,7 @@ void sendOneSegment(int semid, segment* seg) {
     acq_sem(semid, res_ok);
     lib_sem(semid,res_ok);
     lib_sem(semid,seg_dispo);
-    displaySegment(*seg);
+    displaySegment2(*seg);
 }
 
 void sendSegments(int semid, segment* seg, int n) {
@@ -113,14 +126,14 @@ void detachSegment(segment* seg) {
 }
 
 int main(void) {
-    fork();
-    fork();
-    fork();
-    int semid;
-    int shmid;
-    segment *seg;
-    initialisations(&semid, &shmid, &seg );
-    sendSegments(semid, seg, NUMBER_OF_SEGMENTS_PER_CLIENT);
-    detachSegment(seg);
+    for (int i = 0; i < NUMBER_OF_CLIENTS; i++) {
+        fork();
+        int semid;
+        int shmid;
+        segment *seg;
+        initialisations(&semid, &shmid, &seg );
+        sendSegments(semid, seg, NUMBER_OF_SEGMENTS_PER_CLIENT);
+        detachSegment(seg);
+    }
     return 0;
 }
