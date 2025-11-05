@@ -4,6 +4,7 @@
 #include "segdef.h"
 
 static int count = 0;
+int semid;
 
 int longeurPid(int pid) {
     int length = 0;
@@ -68,14 +69,16 @@ void displaySegment(segment seg) {
     printf("--------------------------------------------------------\n");
 }
 
-int main(void) {
+void initialisations() {
     init_rand();
     segment seg = preparedSegment();
-    displaySegment(seg);
-    segment seg2 = preparedSegment();
-    displaySegment(seg2);
+    if ((semid=semget(cle,1,0))==-1) {
+        perror("semget");
+        exit(1);
+    }
+}
 
-    segment seg3 = preparedSegment();
-    displaySegment(seg3);
+int main(void) {
+    initialisations();
     return 0;
 }
